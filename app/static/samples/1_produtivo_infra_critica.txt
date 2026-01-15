@@ -1,0 +1,8 @@
+Assunto: URGENTE - Erro 500 na API de Pagamentos
+
+Prezados,
+Detectamos uma instabilidade crítica no endpoint de checkout (/api/v1/checkout) a partir das 14h30. Os logs indicam timeout na conexão com o banco de dados principal.
+Aproximadamente 40% das transações estão falhando. Precisamos de atuação imediata da equipe de SRE.
+
+Aguardo retorno urgente.
+Engenheiro de Software Sênior
