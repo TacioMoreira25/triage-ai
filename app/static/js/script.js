@@ -1,66 +1,39 @@
-/**
- * Função global para fechar o modal de alerta personalziado.
- * É chamada pelo botão "Entendi" no HTML.
- */
+// Controle do Modal
 function closeModal() {
     const modal = document.getElementById('customAlert');
-    if (modal) {
-        modal.classList.add('hidden');
-    }
+    if (modal) modal.classList.add('hidden');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Elementos do DOM
+    // Elementos UI
     const fileInput = document.getElementById('fileInput');
     const fileNameDisplay = document.getElementById('fileNameDisplay');
     const emailForm = document.getElementById('emailForm');
     const emailContent = document.getElementById('emailContent');
-
-    // Botões de Demonstração
     const btnRandomExample = document.getElementById('btnRandomExample');
     const btnRandomFile = document.getElementById('btnRandomFile');
 
-    // --- DADOS PARA DEMONSTRAÇÃO ---
-
-    // 1. Exemplos de Texto Direto
+    // Mocks de Dados
     const textExamples = [
-        "Assunto: URGENTE - Erro 500 na API de Pagamentos\n\nPrezados,\nDetectamos uma instabilidade crítica no endpoint de checkout (/api/v1/checkout). Os logs indicam timeout no banco de dados.\nPrecisamos de atuação imediata da equipe de SRE.\n\nAguardo retorno urgente.",
-        "Assunto: Solicitação de Reembolso\n\nOlá equipe financeira,\nGostaria de solicitar o reembolso das despesas referentes à visita ao cliente TechSolutions no dia 12/01.\nO valor total é de R$ 145,90.\n\nAtenciosamente,\nAna Silva",
-        "Assunto: Boas Festas!\n\nOi pessoal!\nPassando apenas para desejar um Feliz Natal e um próspero Ano Novo para todos da equipe AutoU!\nAproveitem o descanso.\n\nUm abraço,\nCarlos."
+        "Assunto: URGENTE - Erro 500 na API de Pagamentos\n\nPrezados,\nDetectamos instabilidade crítica. Logs indicam timeout.\nSolicito atuação de SRE.",
+        "Assunto: Reembolso\n\nOlá,\nSolicito reembolso do Uber (R$ 45,00).",
+        "Assunto: Boas Festas!\n\nOi equipe,\nFeliz Natal a todos!"
     ];
 
-    // 2. Arquivos Demo (PDF e TXT)
-    // Devem existir fisicamente na pasta app/static/samples/
     const demoFiles = [
-        "1_produtivo_infra_critica.pdf",
-        "1_produtivo_infra_critica.txt",
-        "2_produtivo_reembolso.pdf",
-        "2_produtivo_reembolso.txt",
-        "3_produtivo_senha_bloqueada.pdf",
-        "3_produtivo_senha_bloqueada.txt",
-        "4_improdutivo_natal.pdf",
-        "4_improdutivo_natal.txt",
-        "5_improdutivo_agradecimento.pdf",
-        "5_improdutivo_agradecimento.txt"
+        "1_produtivo_infra_critica.pdf", "1_produtivo_infra_critica.txt",
+        "2_produtivo_reembolso.pdf", "2_produtivo_reembolso.txt",
+        "4_improdutivo_natal.pdf"
     ];
 
-    // --- FUNCIONALIDADE 1: TEXTO ALEATÓRIO ---
+    // Funcionalidade: Texto Aleatório
     if (btnRandomExample) {
         btnRandomExample.addEventListener('click', () => {
-            // Efeito visual rápido
             emailContent.style.opacity = '0.5';
+            emailContent.value = textExamples[Math.floor(Math.random() * textExamples.length)];
 
-            // Sorteia e preenche
-            const randomText = textExamples[Math.floor(Math.random() * textExamples.length)];
-            emailContent.value = randomText;
-
-            // Limpa o input de arquivo (se houver) para evitar conflito
-            if (fileInput) {
-                fileInput.value = '';
-                fileNameDisplay.textContent = 'PDF ou TXT';
-                fileNameDisplay.classList.remove('text-blue-600', 'font-bold');
-            }
+            if (fileInput) resetFileInput(); // Limpa arquivo para evitar conflito
 
             setTimeout(() => {
                 emailContent.style.opacity = '1';
@@ -69,61 +42,48 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- FUNCIONALIDADE 2: UPLOAD SIMULADO (PDF/TXT) ---
+    // Funcionalidade: Upload Simulado
     if (btnRandomFile) {
         btnRandomFile.addEventListener('click', async () => {
-            // Sorteia um arquivo da lista
             const randomFileName = demoFiles[Math.floor(Math.random() * demoFiles.length)];
-
             fileNameDisplay.textContent = `Baixando ${randomFileName}...`;
 
             try {
-                // Busca o arquivo na pasta static/samples
                 const response = await fetch(`/static/samples/${randomFileName}`);
-                if (!response.ok) throw new Error("Arquivo demo não encontrado no servidor.");
+                if (!response.ok) throw new Error("Arquivo não encontrado.");
 
                 const blob = await response.blob();
-
-                // Define o tipo MIME correto (Importante para o backend aceitar)
                 const mimeType = randomFileName.endsWith('.txt') ? "text/plain" : "application/pdf";
 
-                // Cria o arquivo virtual
+                // Injeta arquivo no input programaticamente
                 const file = new File([blob], randomFileName, { type: mimeType });
-
-                // Injeta o arquivo no input HTML usando DataTransfer
                 const dataTransfer = new DataTransfer();
                 dataTransfer.items.add(file);
                 fileInput.files = dataTransfer.files;
 
-                // Dispara o evento 'change' visualmente
-                const event = new Event('change');
-                fileInput.dispatchEvent(event);
-
-                // Limpa o campo de texto para evitar conflito
-                emailContent.value = "";
+                fileInput.dispatchEvent(new Event('change'));
+                emailContent.value = ""; // Limpa texto para evitar conflito
 
             } catch (error) {
                 console.error(error);
-                fileNameDisplay.textContent = "Erro ao carregar exemplo";
-                alert("Erro: Certifique-se de que os arquivos PDF/TXT estão na pasta app/static/samples/");
+                fileNameDisplay.textContent = "Erro ao carregar demo";
             }
         });
     }
 
-    // --- UX: MOSTRAR NOME DO ARQUIVO SELECIONADO ---
+    // UX: Display nome do arquivo
     if (fileInput) {
         fileInput.addEventListener('change', function() {
             if (this.files && this.files[0]) {
                 fileNameDisplay.textContent = this.files[0].name;
                 fileNameDisplay.classList.add('text-blue-600', 'font-bold');
             } else {
-                fileNameDisplay.textContent = 'PDF ou TXT';
-                fileNameDisplay.classList.remove('text-blue-600', 'font-bold');
+                resetFileInput();
             }
         });
     }
 
-    // --- ENVIO DO FORMULÁRIO (SUBMIT) ---
+    // Submit do Formulário
     if (emailForm) {
         emailForm.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -131,75 +91,64 @@ document.addEventListener('DOMContentLoaded', () => {
             const text = emailContent.value.trim();
             const file = fileInput.files[0];
 
-            // 1. CHECAGEM DE CONFLITO (Texto + Arquivo)
+            // Validação de Conflito (Texto + Arquivo)
             if (text && file) {
-                // Abre o Modal Personalizado (Substituindo o alert antigo)
                 const modal = document.getElementById('customAlert');
                 if(modal) modal.classList.remove('hidden');
-                return; // Para a execução
+                return;
             }
 
-            // 2. CHECAGEM DE VAZIO
-            if(!text && !file) {
-                return alert("Por favor, clique nos botões de exemplo ou digite/envie algo!");
-            }
+            if(!text && !file) return alert("Por favor, insira um conteúdo.");
 
-            // Prepara UI para Loading
+            // UI Loading
             const loading = document.getElementById('loading');
             const resultArea = document.getElementById('resultArea');
-
             loading.classList.remove('hidden');
             resultArea.classList.add('hidden');
 
-            // Monta o FormData
             const formData = new FormData();
-            if (file) {
-                formData.append('file', file);
-            } else {
-                formData.append('text', text);
-            }
+            if (file) formData.append('file', file);
+            else formData.append('text', text);
 
             try {
-                // Requisição ao Backend
-                const response = await fetch('/analyze', {
-                    method: 'POST',
-                    body: formData
-                });
-
+                const response = await fetch('/analyze', { method: 'POST', body: formData });
                 const data = await response.json();
 
                 if (response.ok) {
-                    // A. Atualiza Estatísticas (Dashboard)
-                    document.getElementById('statTime').textContent = data.stats.time;
-                    document.getElementById('statTokens').textContent = data.stats.tokens;
-
-                    // B. Atualiza Badge de Categoria (Cores)
-                    const badge = document.getElementById('categoryBadge');
-
-                    if (data.category === "Produtivo") {
-                        badge.className = "px-4 py-1 rounded-full text-sm font-bold shadow-sm bg-green-100 text-green-700 border border-green-200";
-                    } else {
-                        badge.className = "px-4 py-1 rounded-full text-sm font-bold shadow-sm bg-gray-100 text-gray-600 border border-gray-200";
-                    }
-                    badge.textContent = data.category;
-
-                    // C. Exibe a Resposta da IA
-                    document.getElementById('replyText').textContent = data.reply;
-
-                    // Mostra a área de resultados
-                    resultArea.classList.remove('hidden');
+                    updateDashboard(data);
                 } else {
-                    // Erro retornado pela API
-                    alert("Erro no processamento: " + (data.error || "Erro desconhecido"));
+                    alert("Erro API: " + (data.error || "Desconhecido"));
                 }
-
             } catch (error) {
                 console.error(error);
-                alert("Erro de conexão com o servidor. Verifique se o backend está rodando.");
+                alert("Erro de conexão.");
             } finally {
-                // Esconde o loading independente do resultado
                 loading.classList.add('hidden');
             }
         });
+    }
+
+    function updateDashboard(data) {
+        document.getElementById('statTime').textContent = data.stats.time;
+        document.getElementById('statTokens').textContent = data.stats.tokens;
+
+        const badge = document.getElementById('categoryBadge');
+        const isProductive = data.category === "Produtivo";
+
+        badge.className = isProductive
+            ? "px-4 py-1.5 rounded-full text-sm font-bold shadow-sm bg-green-100 text-green-700 ring-1 ring-green-600/20"
+            : "px-4 py-1.5 rounded-full text-sm font-bold shadow-sm bg-slate-100 text-slate-600 ring-1 ring-slate-600/20";
+
+        badge.textContent = data.category;
+        document.getElementById('replyText').textContent = data.reply;
+        document.getElementById('resultArea').classList.remove('hidden');
+    }
+
+    function resetFileInput() {
+        if(fileInput) fileInput.value = '';
+        if(fileNameDisplay) {
+            fileNameDisplay.textContent = '.PDF ou .TXT';
+            fileNameDisplay.classList.remove('text-blue-600', 'font-bold');
+        }
     }
 });

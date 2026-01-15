@@ -10,13 +10,15 @@ client = OpenAI(
 )
 
 def classify_and_reply(original_text):
-    start_time = time.time() # Inicia cronômetro
+    """Envia texto para LLM (Groq) e retorna JSON estruturado com métricas."""
+    start_time = time.time()
 
+    # NLP Cleaning
     processed_text = clean_text(original_text)
 
     system_prompt = """
-    Você é um classificador de emails.
-    Retorne JSON estrito: {"category": "Produtivo" ou "Improdutivo", "reply": "sugestão..."}
+    Atue como classificador de emails (TriageAI).
+    Retorne APENAS JSON: {"category": "Produtivo"|"Improdutivo", "reply": "sugestão..."}
     """
 
     try:
@@ -29,16 +31,14 @@ def classify_and_reply(original_text):
             temperature=0.1
         )
 
+        # Limpeza da resposta (remove markdown se houver)
         content = response.choices[0].message.content
         clean_content = content.replace("```json", "").replace("```", "").strip()
 
-        # Para cronômetro
-        end_time = time.time()
-        duration = round(end_time - start_time, 2)
+        # Métricas de performance
+        duration = round(time.time() - start_time, 2)
 
         result_json = json.loads(clean_content)
-
-        # Apenas dados reais agora
         result_json['stats'] = {
             'time': f"{duration}s",
             'tokens': response.usage.total_tokens
@@ -47,4 +47,8 @@ def classify_and_reply(original_text):
         return json.dumps(result_json)
 
     except Exception as e:
-        return f'{{"error": "Falha na IA: {str(e)}"}}'
+        return json.dumps({
+            "category": "Erro",
+            "reply": f"Erro no processamento: {str(e)}",
+            "stats": {"time": "0s", "tokens": 0}
+        })

@@ -2,7 +2,7 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
-# Configuração silenciosa do NLTK
+# Download silencioso de recursos NLTK
 try:
     nltk.data.find('tokenizers/punkt')
 except LookupError:
@@ -11,13 +11,11 @@ except LookupError:
     nltk.download('punkt_tab')
 
 def clean_text(text):
+    """Remove stopwords e tokeniza para otimizar contexto da IA."""
     if not text:
         return ""
 
-    # Tokenização e remoção de stopwords
     tokens = word_tokenize(text.lower(), language='portuguese')
     stop_words = set(stopwords.words('portuguese'))
 
-    # Reconstrói o texto apenas com palavras relevantes
-    filtered_tokens = [word for word in tokens if word.isalnum() and word not in stop_words]
-    return " ".join(filtered_tokens)
+    return " ".join([word for word in tokens if word.isalnum() and word not in stop_words])

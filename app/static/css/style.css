@@ -4,7 +4,7 @@ body {
 
 /* Animação do Spinner de Loading */
 .loader {
-    border-top-color: #3B82F6; /* Azul do Tailwind */
+    border-top-color: #3B82F6;
     -webkit-animation: spinner 1.5s linear infinite;
     animation: spinner 1.5s linear infinite;
 }
@@ -14,7 +14,6 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-/* Exemplo de classe utilitária se precisar customizar algo específico */
 .drag-active {
     border-color: #3B82F6 !important;
     background-color: #EFF6FF !important;
