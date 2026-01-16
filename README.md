@@ -2,6 +2,8 @@
 
 Solução full-stack para automação de triagem de emails corporativos. Utiliza NLP e LLMs para classificar mensagens e sugerir respostas, otimizando o fluxo operacional.
 
+**Demo Online:** [https://triage-ai-pxyg.onrender.com](https://triage-ai-pxyg.onrender.com)
+
 ## Sobre o Projeto
 
 Desenvolvido para o desafio técnico da AutoU, o sistema reduz o tempo de triagem manual categorizando emails em:
@@ -12,7 +14,7 @@ Desenvolvido para o desafio técnico da AutoU, o sistema reduz o tempo de triage
 
 Projeto estruturado em **Clean Architecture** e **Separation of Concerns**:
 
-- **Backend (Flask):** Padrão *Application Factory* e *Service Layer* para isolar regras de negócio das rotas.
+- **Backend (Flask):** Padrão *Application Factory* e *Service Layer* para isolar regras de negócio.
 - **IA/NLP:** Pré-processamento com NLTK (limpeza de tokens) e inferência via Groq API (Llama-3-70b) para alta performance.
 - **Frontend:** Server-Side Rendering com Jinja2, estilizado com TailwindCSS e interações via Vanilla JS.
 
@@ -23,7 +25,7 @@ Projeto estruturado em **Clean Architecture** e **Separation of Concerns**:
 - **NLP/Utils:** NLTK, PyPDF2
 - **Frontend:** HTML5, TailwindCSS, JavaScript
 
-## Instalação e Execução
+## Instalação e Execução Local
 
 ### 1. Clonar repositório
 ```bash
@@ -75,7 +77,7 @@ python3 run.py
 
 ```
 
-Acesse em: `http://127.0.0.1:5000`
+Acesse localmente em: `http://127.0.0.1:5000`
 
 ## Funcionalidades
 
