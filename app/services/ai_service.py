@@ -1,8 +1,12 @@
 import time
 import json
+import logging
 from openai import OpenAI
 from config import Config
 from app.utils.text_cleaner import clean_text
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.ERROR)
 
 client = OpenAI(
     base_url=Config.AI_BASE_URL,
@@ -47,8 +51,9 @@ def classify_and_reply(original_text):
         return json.dumps(result_json)
 
     except Exception as e:
+        logger.error(f"Groq API Error: {str(e)}", exc_info=True)
         return json.dumps({
-            "category": "Erro",
-            "reply": f"Erro no processamento: {str(e)}",
+            "category": "Erro Interno",
+            "reply": "Ocorreu um erro ao comunicar com a IA. Os detalhes técnicos foram gravados no log do servidor.",
             "stats": {"time": "0s", "tokens": 0}
         })
