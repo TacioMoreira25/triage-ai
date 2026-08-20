@@ -52,8 +52,15 @@ def classify_and_reply(original_text):
 
     except Exception as e:
         logger.error(f"Groq API Error: {str(e)}", exc_info=True)
+        
+        error_str = str(e)
+        if "429" in error_str:
+            reply_msg = "Limite de requisições atingido. A Groq (Free Tier) permite 30 requisições por minuto. Aguarde um instante e tente novamente."
+        else:
+            reply_msg = "Ocorreu um erro ao comunicar com a IA. Os detalhes técnicos foram gravados no log do servidor."
+            
         return json.dumps({
             "category": "Erro Interno",
-            "reply": "Ocorreu um erro ao comunicar com a IA. Os detalhes técnicos foram gravados no log do servidor.",
+            "reply": reply_msg,
             "stats": {"time": "0s", "tokens": 0}
         })
