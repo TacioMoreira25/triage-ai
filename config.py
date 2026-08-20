@@ -8,7 +8,7 @@ class Config:
     # Configurações centrais e credenciais
     GROQ_API_KEY = os.getenv('GROQ_API_KEY')
     AI_BASE_URL = "https://api.groq.com/openai/v1"
-    AI_MODEL = "llama-3.3-70b-versatile"
+    AI_MODEL = "llama-3.1-70b-versatile"
 
     if not GROQ_API_KEY:
         print("⚠️ AVISO: Chave da API não encontrada.")
