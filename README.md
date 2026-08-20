@@ -15,13 +15,13 @@ Desenvolvido para o desafio técnico da AutoU, o sistema reduz o tempo de triage
 Projeto estruturado em **Clean Architecture** e **Separation of Concerns**:
 
 - **Backend (Flask):** Padrão *Application Factory* e *Service Layer* para isolar regras de negócio.
-- **IA/NLP:** Pré-processamento com NLTK (limpeza de tokens) e inferência via Groq API (Llama-3-70b) para alta performance.
+- **IA/NLP:** Pré-processamento com NLTK (limpeza de tokens) e inferência via Groq API (GPT-OSS-20b) para alta performance.
 - **Frontend:** Server-Side Rendering com Jinja2, estilizado com TailwindCSS e interações via Vanilla JS.
 
 ## Stack
 
 - **Core:** Python 3.12+, Flask
-- **IA:** Llama 3 via Groq API
+- **IA:** GPT-OSS via Groq API
 - **NLP/Utils:** NLTK, PyPDF2
 - **Frontend:** HTML5, TailwindCSS, JavaScript
 
