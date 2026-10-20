@@ -1,0 +1,5 @@
+app/templates/* linguist-detectable=false
+app/static/* linguist-detectable=false
+*.html linguist-detectable=false
+*.css linguist-detectable=false
+*.js linguist-detectable=false
