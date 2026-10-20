@@ -10,12 +10,13 @@ Desenvolvido para o desafio técnico da AutoU, o sistema reduz o tempo de triage
 - **Produtivo:** Requer ação (ex: reembolso, suporte).
 - **Improdutivo:** Informativo/Social (ex: agradecimentos).
 
-## Arquitetura Técnica
+## Arquitetura Técnica e Engenharia de Prompt
 
 Projeto estruturado em **Clean Architecture** e **Separation of Concerns**:
 
-- **Backend (Flask):** Padrão *Application Factory* e *Service Layer* para isolar regras de negócio.
-- **IA/NLP:** Pré-processamento com NLTK (limpeza de tokens) e inferência via Groq API (GPT-OSS-20b) para alta performance.
+- **Backend (Flask):** Padrão *Application Factory* e *Service Layer* para isolar regras de negócio e validações.
+- **IA Generativa & Engenharia de Prompt:** Inferência via Groq API (GPT-OSS / LLaMA) com **Structured Outputs (JSON estrito)**, mitigando alucinações e garantindo respostas determinísticas e tipadas.
+- **NLP Clássico:** Pré-processamento e sanitização de texto com NLTK (limpeza e extração de tokens relevantes).
 - **Frontend:** Server-Side Rendering com Jinja2, estilizado com TailwindCSS e interações via Vanilla JS.
 
 ## Stack
